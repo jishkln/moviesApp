@@ -2,21 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colores.dart';
 
 class VideoWidget extends StatelessWidget {
+  final String url;
   const VideoWidget({
     Key? key,
+    required this.url,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const SizedBox(
+        SizedBox(
           width: double.infinity,
           height: 200,
           child: Image(
-            image: NetworkImage(
-                "https://www.themoviedb.org/t/p/w250_and_h141_face/sJDBJxKWG7h3VpG6jc9Mm9bw4kG.jpg"),
+            image: NetworkImage(url),
             fit: BoxFit.cover,
+            loadingBuilder: (_, child, ImageChunkEvent? progress) {
+              if (progress == null) {
+                return child;
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+            },
+            errorBuilder: (_, Object a, StackTrace? trace) {
+              return const Center(
+                  child: Icon(
+                Icons.wifi,
+                color: kWhiteColor,
+              ));
+            },
           ),
         ),
         Positioned(

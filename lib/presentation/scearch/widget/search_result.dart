@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/search/search_bloc.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/scearch/widget/title.dart';
-
-const String imgUrl =
-    "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vUUqzWa2LnHIVqkaKVlVGkVcZIW.jpg";
 
 class SearchResultWidget extends StatelessWidget {
   const SearchResultWidget({Key? key}) : super(key: key);
@@ -18,15 +17,21 @@ class SearchResultWidget extends StatelessWidget {
         ),
         kHight,
         Expanded(
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 3,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-            childAspectRatio: 1 / 1.4,
-            children: List.generate(20, (index) {
-              return const MainCard();
-            }),
+          child: BlocBuilder<SearchBloc, SearchState>(
+            builder: (context, state) {
+              return GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 3,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1 / 1.4,
+                children: List.generate(20, (index) {
+                  final movie = state.searchResultList[index];
+                  return MainCard(
+                      imageUrl: '$imageAppentUrl${movie.posterPath}');
+                }),
+              );
+            },
           ),
         )
       ],
@@ -35,15 +40,16 @@ class SearchResultWidget extends StatelessWidget {
 }
 
 class MainCard extends StatelessWidget {
-  const MainCard({Key? key}) : super(key: key);
+  const MainCard({Key? key, required this.imageUrl}) : super(key: key);
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: const DecorationImage(
+        image: DecorationImage(
             image: NetworkImage(
-              imgUrl,
+              imageUrl,
             ),
             fit: BoxFit.cover),
         borderRadius: kRadius10,

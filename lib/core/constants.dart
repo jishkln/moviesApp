@@ -18,3 +18,5 @@ const kMainImage =
 
 const TextStyle kHomeTitleText =
     TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
+
+const imageAppentUrl = "https://image.tmdb.org/t/p/w500";

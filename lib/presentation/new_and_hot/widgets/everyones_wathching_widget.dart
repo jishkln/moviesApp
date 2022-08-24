@@ -5,8 +5,14 @@ import 'package:netflix/presentation/home/widgets/custom_button_widget.dart';
 import 'package:netflix/presentation/new_and_hot/widgets/video_widget.dart';
 
 class EveryonesWatchingWidget extends StatelessWidget {
+  final String posterPath;
+  final String movieName;
+  final String description;
   const EveryonesWatchingWidget({
     Key? key,
+    required this.posterPath,
+    required this.movieName,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -16,17 +22,24 @@ class EveryonesWatchingWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           kHight,
-          const Text(
-            'Friends',
-            style: TextStyle(fontSize: 16),
+          Text(
+            movieName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 22),
           ),
           kHight,
-          const Text(
-            "Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident",
-            style: TextStyle(color: kGreycolor),
+          Text(
+            description,
+            maxLines: 4,
+             overflow: TextOverflow.ellipsis, 
+
+            style: const TextStyle(color: kGreycolor),
           ),
           kHight,
-          const VideoWidget(),
+          VideoWidget(
+            url: posterPath,
+          ),
           kHight,
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

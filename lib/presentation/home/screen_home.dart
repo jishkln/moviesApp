@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/application/home/home_bloc.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/home/widgets/background_card.dart';
 import 'package:netflix/presentation/home/widgets/main_tltle_number.dart';
@@ -7,8 +9,6 @@ import 'package:netflix/presentation/widgets/main_title_card.dart';
 
 ValueNotifier<bool> scrolNotifier = ValueNotifier(true);
 
-const String imgUrl =
-    "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg";
 const String logoImg =
     "https://static.vecteezy.com/system/resources/previews/006/874/233/original/netflix-logo-icon-on-white-background-free-vector.jpg";
 
@@ -17,6 +17,9 @@ class ScreenHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<HomeBloc>(context).add(const GetHomeScreenData());
+    });
     return Scaffold(
         body: ValueListenableBuilder(
             valueListenable: scrolNotifier,
@@ -35,31 +38,83 @@ class ScreenHome extends StatelessWidget {
                 },
                 child: Stack(
                   children: [
-                    ListView(
-                      children: const [
-                        BackgroundCard(),
-                        kHight,
-                        MainTitleCard(
-                          title: 'Relesed in the past year',
-                        ),
-                        kHight,
-                        MainTitleCard(
-                          title: ' Trending Now',
-                        ),
-                        kHight,
-                        MainTItleNumberCard(
-                          imgUrl: imgUrl,
-                        ),
-                        kHight,
-                        MainTitleCard(
-                          title: ' Tense Drama',
-                        ),
-                        kHight,
-                        MainTitleCard(
-                          title: ' South Indian Cinima',
-                        ),
-                        kHight,
-                      ],
+                    BlocBuilder<HomeBloc, HomeState>(
+                      builder: (context, state) {
+                        if (state.isLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          );
+                        } else if (state.hasError) {
+                          return const Center(
+                            child:
+                                Text("Error While Loading comming soon List"),
+                          );
+                        }
+//relesed past year
+                        final _relesePastYear =
+                            state.pastYearMovieList.map((m) {
+                          return "$imageAppentUrl${m.posterPath}";
+                        }).toList();
+                        //trending
+                        final _trending = state.treandingMovieList.map((m) {
+                          return "$imageAppentUrl${m.posterPath}";
+                        }).toList();
+                        _trending.shuffle();
+
+                        //tonsDrama
+                        final _dtama = state.tenceDramaMovieList.map((m) {
+                          return "$imageAppentUrl${m.posterPath}";
+                        }).toList();
+                        _dtama.shuffle();
+
+                        //SouthIndia
+                        final _southIndia = state.southIndianMovieList.map((m) {
+                          return "$imageAppentUrl${m.posterPath}";
+                        }).toList();
+                        _southIndia.shuffle();
+                        //Tv shows
+                        final _top10TvShows =
+                            state.southIndianMovieList.map((m) {
+                          return "$imageAppentUrl${m.posterPath}";
+                        }).toList();
+
+
+
+                        return ListView(
+                          children: [
+                            const BackgroundCard(),
+                            kHight,
+                            MainTitleCard(
+                              title: 'Relesed in the past year',
+                              posterList: _relesePastYear,
+                            ),
+                            kHight,
+                            MainTitleCard(
+                              title: ' Trending Now',
+                              posterList: _trending,
+                            ),
+                            kHight,
+                            
+                            
+                            MainTItleNumberCard(
+                              postersList: _top10TvShows.sublist(0, 10),
+                            ),
+                            kHight,
+                            MainTitleCard(
+                              title: ' Tense Drama',
+                              posterList: _dtama,
+                            ),
+                            kHight,
+                            MainTitleCard(
+                              title: ' South Indian Cinima',
+                              posterList: _southIndia,
+                            ),
+                            kHight,
+                          ],
+                        );
+                      },
                     ),
                     scrolNotifier.value == true
                         ? AnimatedContainer(

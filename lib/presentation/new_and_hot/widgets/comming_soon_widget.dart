@@ -5,11 +5,21 @@ import 'package:netflix/core/constants.dart';
 import 'package:netflix/presentation/home/widgets/custom_button_widget.dart';
 import 'package:netflix/presentation/new_and_hot/widgets/video_widget.dart';
 
-
-
 class CommingSoonWidget extends StatelessWidget {
+  final String id;
+  final String month;
+  final String day;
+  final String posterPath;
+  final String movieName;
+  final String description;
   const CommingSoonWidget({
     Key? key,
+    required this.id,
+    required this.month,
+    required this.day,
+    required this.posterPath,
+    required this.movieName,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -23,17 +33,18 @@ class CommingSoonWidget extends StatelessWidget {
           height: 470,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                'FEB',
-                style: TextStyle(
+                month,
+                style: const TextStyle(
                   fontSize: 14,
                   color: kGreycolor,
                 ),
               ),
               Text(
-                '11',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                day,
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               )
             ],
           ),
@@ -44,17 +55,21 @@ class CommingSoonWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const VideoWidget(),
+                 VideoWidget(url: posterPath),
               kHight,
               Row(
                 children: [
                   kWidth,
-                  Text(
-                    'TallGirl 2',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 30, fontWeight: FontWeight.w700),
+                  Expanded(
+                    child: Text(
+                      movieName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.montserrat(
+                          fontSize: 22, fontWeight: FontWeight.w700),
+                    ),
                   ),
-                  const Spacer(),
+                  //
                   ButtonMainScreen(
                     title: "remind me",
                     size: 12,
@@ -71,15 +86,18 @@ class CommingSoonWidget extends StatelessWidget {
                 ],
               ),
               kHight,
-              const Text('Comming on Friday'),
+              Text('Comming on $day $month'),
               kHight,
-              const Text(
-                'Tall girl 2',
+              Text(
+                movieName,
+                maxLines: 1,
+                overflow: TextOverflow.clip,
                 style: kHomeTitleText,
               ),
               kHight,
-              const Text(
-                "Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident",
+              Text(
+                description,
+                maxLines: 4,
                 style: TextStyle(color: kGreycolor),
               )
             ],
@@ -89,4 +107,3 @@ class CommingSoonWidget extends StatelessWidget {
     );
   }
 }
-
